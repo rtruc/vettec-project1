@@ -1,38 +1,54 @@
-let currentlyZoomedImage;
-const thumbnailQuality = "_small";
-const zoomQuality = "_large";
-let shadowBox;
+let galleryRootDir = "./img/gallery/"
+const thumbnailQuality = "thumbnail";
+const zoomQuality = "large";
 let gallerySections = [];
+
+const layoutPattern = [4, 3, 5];
+
+const splitOnCommasOutsideQuotesRegex = /(".*?"|[^",\s]+)(?=\s*,|\s*$)/g;
+
+let currentlyZoomedImage;
+let shadowBox;
+
 let showMenu = false;
 
 
-const sectionHeaders = [
-    {
-        title: 'Early Life',
-        description: "Salutantibus vitae elit libero, a pharetra augue. Quis aute iure reprehenderit in voluptate velit esse. Excepteur sint obcaecat cupiditat non proident culpa."},
-    {
-        title: 'Training',
-        description: "Quisque ut dolor gravida, placerat libero vel, euismod. Magna pars studiorum, prodita quaerimus. At nos hinc posthac, sitientis piros Afros."},
-    {
-        title: 'USS Bataan',
-        description: "Pellentesque habitant morbi tristique senectus et netus. Ab illo tempore, ab est sed immemorabili. Mercedem aut nummos unde unde extricat, amaras."},
-    {
-        title: 'Japan',
-        description: "Sed haec quis possit intrepidus aestimare tellus. Nec dubitamus multa iter quae et nos invenerat. Cum ceteris in veneratione tui montes, nascetur mus."},
-    {
-        title: 'College Years',
-        description: "Ullamco laboris nisi ut aliquid ex ea commodi consequat. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. A communi observantia non est recedendum."},
-    {
-        title: 'California',
-        description: "Curabitur blandit tempus ardua ridiculus sed magna. Petierunt uti sibi concilium totius Galliae in diem certam indicere. Curabitur blandit tempus ardua ridiculus sed magna."},
-    {
-        title: 'Family Life',
-        description: "Me non paenitet nullum festiviorem excogitasse ad hoc. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Me non paenitet nullum festiviorem excogitasse ad hoc."},
-];
+function buildPhotoGallery(galleryInitCSVname) {
+    fetch(galleryRootDir + galleryInitCSVname)
+        .then(response => response.text())
+        .then(responseText => parseSectionCSV(responseText)) //Parse Gallery CSV in to section data
+        .then(sectionData => buildPhotoGallerySections(sectionData))    // Build section from section data  
+        .catch(reason => console.log("Oops!" + reason));
+}
 
-function buildPhotoGallery(listOfSections, listViewFlag) {
+function parseSectionCSV(csv) {
+    let sections = [];
+    let sectionNumber = 0;
+    splitsStrings = csv.split(/\r?\n/);
+
+    for (let entry of splitsStrings) {
+        if (entry[0] && entry[0] != '#') {
+
+            // splits = entry.split(',');
+            splits = entry.match(splitOnCommasOutsideQuotesRegex);
+
+            let section = {};
+            // section.number = splits[0].trim();
+            section.directory = splits[0].trim();
+            section.title = splits[1].trim();
+            section.description = splits[2].trim();
+            section.number = sectionNumber;
+            sectionNumber++;
+
+            sections.push(section);
+        }
+    }
+    return sections;
+}
+
+function buildPhotoGallerySections(sections, listViewFlag) {
     let promises = []
-    listOfSections.forEach(section => {
+    sections.forEach(section => {
         promises.push(fetchSectionContentListAndBuildGallerySection(section, listViewFlag));
     })
 
@@ -42,44 +58,28 @@ function buildPhotoGallery(listOfSections, listViewFlag) {
         .catch(section => console.log(section + ' failed'));
 }
 
-
-function assembleSectionsInOrder() {
-    // SORT SECTIONS
-    gallerySections.sort((s1, s2) => {
-        if (s1.id < s2.id) {
-            return -1;
-        }
-        if (s1.id > s2.id) {
-            return 1;
-        }
-        return 0;
-    });
-
-    for (let section of gallerySections) {
-        appendPhotoSectionToGallery(section);
-    }
-}
-
 function fetchSectionContentListAndBuildGallerySection(section, listViewFlag) {
-    let path = `./img/photos/${section.name}/`;
-    let fileName = `${section.name}.csv`;
+    let path = `${galleryRootDir}${section.directory}/`;
+    let fileName = `${section.directory}.csv`;
 
     return (fetch(path + fileName)
         .then(response => response.text())
-        .then(responseText => parseCSVPhotoData(responseText))
-        .then(photoParameters => generatePhotoSection(photoParameters, path, section.number, section.name, listViewFlag))
+        .then(responseText => parsePhotosCSV(responseText))
+        .then(photoParameters => generatePhotoSection(photoParameters, path, section, listViewFlag))
         .then(photoSection => gallerySections.push(photoSection))
         .catch(reason => console.log("Oops!" + reason)))
 }
 
-function parseCSVPhotoData(csv) {
+
+function parsePhotosCSV(csv) {
     let photos = [];
     splitsStrings = csv.split(/\r?\n/);
 
     for (let entry of splitsStrings) {
 
         if (entry[0] && entry[0] != '#') {
-            splits = entry.split(',');
+            // splits = entry.split(',');
+            splits = entry.match(splitOnCommasOutsideQuotesRegex);
 
             let photo = {};
 
@@ -90,26 +90,19 @@ function parseCSVPhotoData(csv) {
             photos.push(photo);
         }
     }
-
     return photos;
 }
 
-// ATTACH ASSEMBLED SECTION TO MAIN GALLERY
-function appendPhotoSectionToGallery(photoSection) {
-    let galleryDiv = document.getElementById('gallery');
-    galleryDiv.appendChild(photoSection);
-}
 
-
-function generatePhotoSection(photos, folder, sectionNumber, sectionName, listViewFlag) {
+function generatePhotoSection(photos, folder, section, listViewFlag) {
     // BUILD COLUMN DIV TO HOLD THIS SECTION
     let columnDiv = document.createElement('div');
     columnDiv.classList.add('flex-column-gallery');
-    columnDiv.id = `section${sectionNumber}`;
-    columnDiv.setAttribute('name', sectionName);
+    columnDiv.id = `section${section.number}`;
+    columnDiv.setAttribute('name', section.name);
 
     //GENERATE AND ATTACH HEADER HERE
-    let sectionHeader = generateSectionHeader(sectionNumber, sectionName);
+    let sectionHeader = generateSectionHeader(section);
     columnDiv.appendChild(sectionHeader);
     let divider = document.createElement('hr');
     divider.classList.add('gallery-divider');
@@ -157,12 +150,42 @@ function generatePhotoSection(photos, folder, sectionNumber, sectionName, listVi
     return columnDiv;
 }
 
-function generateSectionHeader(sectionNumber, sectionName) {
+function assembleSectionsInOrder() {
+    // SORT SECTIONS
+    gallerySections.sort((s1, s2) => {
+        if (s1.id < s2.id) {
+            return -1;
+        }
+        if (s1.id > s2.id) {
+            return 1;
+        }
+        return 0;
+    });
+
+    for (let section of gallerySections) {
+        appendPhotoSectionToGallery(section);
+    }
+}
+
+
+
+
+
+// ATTACH ASSEMBLED SECTION TO MAIN GALLERY
+function appendPhotoSectionToGallery(photoSection) {
+    let galleryDiv = document.getElementById('gallery');
+    galleryDiv.appendChild(photoSection);
+}
+
+
+
+
+function generateSectionHeader(section) {
     let rowDiv = document.createElement('div');
     rowDiv.classList.add("flex-row-gallery-header");
 
-    rowDiv.innerHTML += `<h1 class="gallery-header">${sectionHeaders[sectionNumber].title}</h1>`;
-    rowDiv.innerHTML += `<p class="gallery-header-description">${sectionHeaders[sectionNumber].description}</p>`;
+    rowDiv.innerHTML += `<h1 class="gallery-header">${section.title}</h1>`;
+    rowDiv.innerHTML += `<p class="gallery-header-description">${section.description}</p>`;
 
     console.log(rowDiv);
     return rowDiv;
@@ -325,8 +348,8 @@ function enableClickToZoomOnImages() {
     let galleryImg2 = document.getElementsByClassName("gallery-img-2");
 
     let allGalleryImages = [].concat(Array.from(galleryImg))
-                             .concat(Array.from(galleryImg1))
-                             .concat(Array.from(galleryImg2));
+        .concat(Array.from(galleryImg1))
+        .concat(Array.from(galleryImg2));
 
     for (let img of allGalleryImages) {
         img.addEventListener('click', zoomImage);
@@ -368,7 +391,7 @@ window.addEventListener('load', () => {
 
         shadowBox = document.getElementById('shadow-box');
 
-        buildPhotoGallery(sectionsIDs);
+        buildPhotoGallery("gallery.csv");
         // buildPhotoGallery([sectionsIDs[3]], false);
         // buildPhotoGallery([sectionsIDs[2]], true);
 
