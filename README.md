@@ -24,7 +24,6 @@ Hi, my name is Richard and I am a student in Skillstorm's VET-TEC training progr
 <!-- Contains images relating to the life chapter -->
 
 
-DONE
 <!-- GENERAL -->
 <!-- Proper use of GitHub to maintain the versioning of your webpage -->
 <!-- Each page should have a header/navigation bar containing links to your website's other pages -->
