@@ -17,7 +17,6 @@ window.addEventListener('load', () => {
     if (document.getElementById('gallery')) {        
         shadowBox = document.getElementById('shadow-box');
         
-        //
         let galleryRootDir = "./img/gallery/";
         let galleryCSV = "gallery.csv";
         buildPhotoGallery(galleryRootDir, galleryCSV);
@@ -271,7 +270,7 @@ function zoomImage(event) {
         this.style.transform = null;
 
         // DELAY RESTING Z AXIS SO ZOOMED IMAGE DOESN'T 'POP' UNDERNEATH OTHER IMAGES
-        setTimeout(() => this.style.zIndex = null, 50);
+        setTimeout(() => this.style.zIndex = null, 250);
 
         // RETURN TO THUMBNAIL QUALITY
         this.src = this.src.replace(zoomQuality, thumbnailQuality);
@@ -331,11 +330,11 @@ function zoomImage(event) {
 
 function whitespaceClicked() {
     if (currentlyZoomedImage) {
-        // setTimeout(() => currentlyZoomedImage.style.zIndex = null, 50);
         shadowBox.style.background = 'rgba(0, 0, 0, 0.0)';
         currentlyZoomedImage.style.transform = null;
-        currentlyZoomedImage.style.zIndex = null;
         currentlyZoomedImage.src = currentlyZoomedImage.src.replace(zoomQuality, thumbnailQuality);
+        let timeDelayedReference = currentlyZoomedImage;
+        setTimeout(() => timeDelayedReference.style.zIndex = null, 250);
         currentlyZoomedImage = null;
     }
 
@@ -380,7 +379,6 @@ function showDropdownMenu() {
 
 function generateDropdownNavigationMenu(sections) {
     const dropdownMenu = document.getElementById('dropdown-menu');
-    // console.log("Dropdown menu ", dropdownMenu);
 
     for(let section of sections) {
         let menuItem = document.createElement('a');

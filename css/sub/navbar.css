@@ -141,8 +141,6 @@
     background-color: rgba(128, 128, 128, 0.905);
     opacity: 0%;
 
- 
-
     transition: opacity 250ms ease-in-out;
 
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
@@ -150,7 +148,7 @@
     border-radius: 0px 0px 5px 5px;
 
     /* IF DROPDOWN SET TO BLURRED BACKGROUND THEN MENU BAR LOSES BLUR EFFECT... */
-    backdrop-filter: blur(10px);
+    /* backdrop-filter: blur(10px); */
     /* -webkit-backdrop-filter: blur(10px); */
 }
 /* ADD THIS CLASS TO MENU FOR REVEAL */
