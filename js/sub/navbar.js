@@ -6,9 +6,9 @@ class NavBar extends HTMLElement {
     connectedCallback(){
         let pageTitle = document.getElementById('title').textContent;
 
-        let entries = [["nav-item", "./index.html", "Home"],
-            ["nav-item", "./about-me.html", "About Me"],
-            ["nav-item", "./journey.html", "My Journey"]];
+        let entries = [["./index.html", "Home"],
+            ["./about-me.html", "About Me"],
+            ["./journey.html", "My Journey"]];
 
         // PAGE LINKS
         for (let entry of entries) {
@@ -16,27 +16,25 @@ class NavBar extends HTMLElement {
             let link;
 
             // IF ENTRY FOR CURRENT PAGE, DON'T ASSIGN LINK
-            // ASSIGN TAG FOR JAVASCRIPT
-            if(entry[2] != pageTitle) {
-                link = `href="${entry[1]}"`;
+            // ASSIGN TAG FOR JAVASCRIPT SCROLL
+            if(entry[1] != pageTitle) {
+                link = `href="${entry[0]}"`;
             } else {
                 link = `id="active"`;
             }   
 
-            // IF GALLERY PAGE, GENERATE GALLERY LINKS
-            if (pageTitle == entry[2] && entry[2] == "My Journey") {
-                this.innerHTML += `<div id="dropdown" class="${entry[0]}"><a ${link}>${entry[2]}</a>
-                <div id="dropdown-menu" class="dropdown-menu">
-                <a class="menu-button" href="#section0">Early Life</a>
-                <a class="menu-button" href="#section1">Training</a>
-                <a class="menu-button" href="#section2">USS Bataan</a>
-                <a class="menu-button" href="#section3">Japan</a>
-                <a class="menu-button" href="#section4">College Years</a>
-                <a class="menu-button" href="#section5">California</a>
-                <a class="menu-button" href="#section6">Family</a>
-                </div>`;
+            // IF GALLERY PAGE, GENERATE ANCHOR FOR GALLERY LINKS
+            if (pageTitle == entry[1] && entry[1] == "My Journey") {
+                this.innerHTML +=   `<div id="dropdown" class="nav-item"><a ${link}>${entry[1]}</a>
+                                        <div id="dropdown-menu" class="dropdown-menu">
+                                        </div>
+                                    </div>`;
+                // this.innerHTML +=   `<div id="dropdown" class="nav-item"><a ${link}>${entry[1]}</a>
+                //                         <div id="dropdown-menu" class="dropdown-menu">
+                //                         </div>
+                //                     </div>`;
             } else {
-                this.innerHTML += `<div class="${entry[0]}"><a ${link}>${entry[2]}</a></div>`;
+                this.innerHTML += `<div class="nav-item"><a ${link}>${entry[1]}</a></div>`;
             }
 
         

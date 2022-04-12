@@ -2,10 +2,6 @@
     display: flex;
     flex-direction: column;
     margin: auto;
-    margin-top: 25px;
-    padding-top: 10px;
-
-    margin-bottom: 35px;
 
     flex-wrap: no-wrap;
 
@@ -13,6 +9,11 @@
 
     align-items: center;
     max-width: 1400px;
+}
+/* BREATHING ROOM FOR FOOTER */
+.flex-column-gallery:last-of-type {
+        margin-bottom: 35px;
+
 }
 
 .flex-row-gallery {
@@ -92,7 +93,7 @@
     transition:transform 0.25s ease;
 }
 .gallery-img-1 {
-    max-height: 400px;
+    max-height: 300px;
 }
 .gallery-img-2 {
     max-height: 300px;
