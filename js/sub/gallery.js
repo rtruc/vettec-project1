@@ -77,12 +77,12 @@ function fetchSectionContentListAndBuildGallerySection(section) {
 function parseSectionCSV(csv, galleryRootDir) {
     let sections = [];
     let sectionNumber = 0;
-    splitsStrings = csv.split(/\r?\n/);
+    const splitsStrings = csv.split(/\r?\n/);
 
     for (let entry of splitsStrings) {
-        if (entry[0] && entry[0] != '#') {
+        if (entry[0] && entry[0] !== '#') {
 
-            splits = entry.match(splitStringOnCommasOutsideQuotes);
+            const splits = entry.match(splitStringOnCommasOutsideQuotes);
 
             let section = {};
             section.rootDir = galleryRootDir;
@@ -101,12 +101,12 @@ function parseSectionCSV(csv, galleryRootDir) {
 
 function parsePhotosCSV(csv) {
     let photos = [];
-    splitsStrings = csv.split(/\r?\n/);
+    const splitsStrings = csv.split(/\r?\n/);
 
     for (let entry of splitsStrings) {
 
-        if (entry[0] && entry[0] != '#') {
-            splits = entry.match(splitStringOnCommasOutsideQuotes);
+        if (entry[0] && entry[0] !== '#') {
+            const splits = entry.match(splitStringOnCommasOutsideQuotes);
 
             let photo = {};
 
@@ -156,7 +156,7 @@ function generatePhotoSection(photos, folder, section) {
     for (let i = 0; i < photos.length; i++) {
         rowPhotos.push(photos[i]);
         rowCount++;
-        if (rowCount == rowCurrent) {
+        if (rowCount === rowCurrent) {
             let photoRowDiv = generatePhotoRow(rowPhotos, folder);
             columnDiv.appendChild(photoRowDiv);
 
@@ -226,8 +226,8 @@ function generatePhotoRow(photos, filePath) {
         let imageTag;
 
         //KNOWN GOOD PATH BEFORE ADDING TEXT BOXES
-        // IF ONLY 1-2 IMAGES LEFT, ASSIGN SPECIAL CLASS SO NOT OVERSIZED
-        if (photos.length == 1 || photos.length == 2) {
+        // IF ONLY 1-2 IMAGES LEFT, ASSIGN SPECIAL CLASS SO NOT OVER-SIZED
+        if (photos.length === 1 || photos.length === 2) {
             imageTag = `<img class="gallery-img-${photos.length}" `;
         } else {
             imageTag = `<img class="gallery-img" `;
@@ -263,8 +263,8 @@ function zoomImage(event) {
     // STOP CLICKS PROPAGATING TO WHITE SPACE AND CANCELING ZOOM
     event.stopPropagation();
 
-    // IF CURRENTLY ZOOMED IMAGE WAS CLICKED, UNZOOM AND RETURN   
-    if (currentlyZoomedImage == this) {
+    // IF CURRENTLY ZOOMED IMAGE WAS CLICKED, UN-ZOOM AND RETURN
+    if (currentlyZoomedImage === this) {
         shadowBox.style.background = 'rgba(0, 0, 0, 0.0)';
 
         this.style.transform = null;
@@ -278,7 +278,7 @@ function zoomImage(event) {
         return;
     }
 
-    // DIFFERENT IMAGE IS CURRENTLY ZOOMED, UNZOOM THAT IMAGE BEFORE PRECEDING
+    // DIFFERENT IMAGE IS CURRENTLY ZOOMED, UN-ZOOM THAT IMAGE BEFORE PRECEDING
     if (currentlyZoomedImage) {
         currentlyZoomedImage.style.transform = null;
         currentlyZoomedImage.style.zIndex = null;
@@ -306,9 +306,9 @@ function zoomImage(event) {
     let yTranslate = screenY / 2 - divY - divHeight / 2;
     let xTranslate = screenX / 2 - divX - divWidth / 2;
 
-    let overscan = 100;
-    let heightMultiplier = (screenY - overscan) / divHeight;
-    let widthMultiplier = (screenX - overscan) / divWidth;
+    let overScan = 100;
+    let heightMultiplier = (screenY - overScan) / divHeight;
+    let widthMultiplier = (screenX - overScan) / divWidth;
     let scaleMultiplier = heightMultiplier < widthMultiplier ? heightMultiplier : widthMultiplier;
 
     this.style.transform = `translate(${xTranslate}px,${yTranslate}px) scale(${scaleMultiplier}) `;
