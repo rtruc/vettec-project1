@@ -3,4 +3,5 @@ Website developed using HTML5, CSS3, Javascript and a whole lot of Lorem Ipsum. 
 - Gallery built in Javascript and uses a CSV payload for initialization. ([Source](https://github.com/rtruc/vettec-project1/blob/main/js/sub/gallery.js)) ([Hosted Example](https://rtruc.github.io/vettec-project1/journey.html))
 - [Navigation controls](https://github.com/rtruc/vettec-project1/blob/main/js/sub/navbar.js) and [footers](https://github.com/rtruc/vettec-project1/blob/main/js/sub/footer.js) are dynamically generated HTML elements built using Javascript. 
 - Includes a custom [script import loader](https://github.com/rtruc/vettec-project1/blob/main/js/imports.js) to enable development as a multi-file Javascript project.
+- Styled using CSS3 and modern flex boxes.
 - Utilized Git and GitHub for version control.

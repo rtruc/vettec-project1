@@ -1,6 +1,5 @@
 const thumbnailQuality = "thumbnail";
 const zoomQuality = "large";
-// const splitStringOnCommasOutsideQuotes = /(".*?"|[^",\s]+)(?=\s*,|\s*$)/g;
 const splitStringOnCommasOutsideQuotes = /(".*?"|[^\s",][^",]+[^\s",])(?=\s*,|\s*$)/g;
 
 const listViewFlag = false;
