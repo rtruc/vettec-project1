@@ -1,6 +1,7 @@
 const thumbnailQuality = "thumbnail";
 const zoomQuality = "large";
-const splitStringOnCommasOutsideQuotes = /(".*?"|[^",\s]+)(?=\s*,|\s*$)/g;
+// const splitStringOnCommasOutsideQuotes = /(".*?"|[^",\s]+)(?=\s*,|\s*$)/g;
+const splitStringOnCommasOutsideQuotes = /(".*?"|[^\s",][^",]+[^\s",])(?=\s*,|\s*$)/g;
 
 const listViewFlag = false;
 let gallerySections = [];
@@ -212,7 +213,7 @@ function generateSectionHeader(section) {
     rowDiv.classList.add("flex-row-gallery-header");
 
     rowDiv.innerHTML += `<h1 class="gallery-header">${section.title}</h1>`;
-    rowDiv.innerHTML += `<p class="gallery-header-description">${section.description}</p>`;
+    rowDiv.innerHTML += `<p class="gallery-header-description">${section.description.replace(/['"]+/g, '')}</p>`;
 
     return rowDiv;
 }
@@ -225,7 +226,6 @@ function generatePhotoRow(photos, filePath) {
     for (let photo of photos) {
         let imageTag;
 
-        //KNOWN GOOD PATH BEFORE ADDING TEXT BOXES
         // IF ONLY 1-2 IMAGES LEFT, ASSIGN SPECIAL CLASS SO NOT OVER-SIZED
         if (photos.length === 1 || photos.length === 2) {
             imageTag = `<img class="gallery-img-${photos.length}" `;
@@ -369,9 +369,6 @@ function hideDropdownMenu() {
 }
 
 function showDropdownMenu() {    
-    // ! FADE OUT ANIMATION WORKS BUT FADE IN DOES NOT... 
-    // dropdownMenu.style.opacity = 1;
-    // setTimeout(() => dropdownMenu.classList.add("show-menu"), 250);
 
     dropdownMenu.classList.add("show-menu")
     isShowingMenu = true;
